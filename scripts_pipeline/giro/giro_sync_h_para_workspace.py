@@ -17,12 +17,17 @@ import shutil
 import sys
 from datetime import date, timedelta
 from pathlib import Path
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from shared.ambiente import DriveIndisponivel, pasta_boletins_drive
 
 # ──────────────────────────────────────────────────────────────────────
 # CONFIGURAÇÃO
 # ──────────────────────────────────────────────────────────────────────
-ORIGEM_H = Path("H:/Meu Drive/RADIO TJRN CONTEÚDO/00_PRODUCAO_2026/01_BOLETINS_DIARIOS/03_AUDIOS_RADIO")
-DESTINO_WORKSPACE = Path("data/processed/PRODUCAO_2026/01_BOLETINS_BRUTOS")
+def origem_drive():
+    return pasta_boletins_drive(2026)
+
+DESTINO_WORKSPACE = Path(__file__).resolve().parents[2] / "data/processed/PRODUCAO_2026/01_BOLETINS_BRUTOS"
 DIVISOR = Path(__file__).resolve().parent
 
 # ──────────────────────────────────────────────────────────────────────
@@ -31,18 +36,20 @@ DIVISOR = Path(__file__).resolve().parent
 
 def verificar_acesso_h() -> bool:
     """Verifica se H: está acessível."""
-    if not ORIGEM_H.exists():
-        print(f"✗ ERRO: H: não acessível em {ORIGEM_H}")
+    try:
+        origem = origem_drive()
+    except DriveIndisponivel as exc:
+        print(f"✗ ERRO: {exc}")
         print("  Conecte o Google Drive e tente novamente.")
         return False
-    print(f"✓ H: acessível: {ORIGEM_H}")
+    print(f"✓ Drive acessível: {origem}")
     return True
 
 
 def listar_datas_disponiveis() -> set[date]:
     """Lista datas disponíveis em H:."""
     datas = set()
-    for mp3 in ORIGEM_H.rglob("*.mp3"):
+    for mp3 in origem_drive().rglob("*.mp3"):
         m = re.search(r"BOLETIM_RADIO_TJRN_(\d{2})_(\d{2})_(\d{4})_", mp3.name)
         if m:
             dia, mes, ano = int(m.group(1)), int(m.group(2)), int(m.group(3))
@@ -54,7 +61,7 @@ def copiar_boletins_janela(janela_inicio: date, janela_fim: date) -> int:
     """Copia boletins de H: para workspace na janela especificada."""
     copiados = 0
     
-    for mp3 in ORIGEM_H.rglob("*.mp3"):
+    for mp3 in origem_drive().rglob("*.mp3"):
         m = re.search(r"BOLETIM_RADIO_TJRN_(\d{2})_(\d{2})_(\d{4})_", mp3.name)
         if not m:
             continue
@@ -78,7 +85,7 @@ def main():
     print("=" * 70)
     print("SYNC H: → WORKSPACE (Regra Crítica GIRO)")
     print("=" * 70)
-    print(f"Origem:  {ORIGEM_H}")
+    print("Origem: descoberta automaticamente antes da copia")
     print(f"Destino: {DESTINO_WORKSPACE}")
     print()
     
@@ -94,7 +101,7 @@ def main():
     copiados = 0
     erros = 0
     
-    for mp3 in ORIGEM_H.rglob("*.mp3"):
+    for mp3 in origem_drive().rglob("*.mp3"):
         # Extrair data do nome
         m = re.search(r"BOLETIM_RADIO_TJRN_(\d{2})_(\d{2})_(\d{4})_", mp3.name)
         if m:

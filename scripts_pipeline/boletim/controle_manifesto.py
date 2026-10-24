@@ -86,5 +86,10 @@ def sincronizar_boletim(relatorio,destino):
 if __name__=='__main__':
     import argparse,os
     p=argparse.ArgumentParser();p.add_argument('manifesto');p.add_argument('--saida',required=True);p.add_argument('--assets',required=True);a=p.parse_args()
+    if __package__ in (None, ''):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from shared.ambiente import inicializar_ambiente
+    inicializar_ambiente()
     os.environ['DIVISOR_ASSETS']=a.assets
     print(json.dumps(montar_manifesto_boletim(a.manifesto,a.saida,a.assets),ensure_ascii=True))

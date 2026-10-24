@@ -1,62 +1,40 @@
-# Migração para agente_radio
+# Migracao para agente_radio
 
-Nome adotado pelo usuário em 24/10/2026: `agente_radio`.
-Escopo do sistema: BOLETIM, NJUD e GIRO nas Comarcas.
+Nome adotado em 24/10/2026. O sistema abrange BOLETIM, NJUD e GIRO nas Comarcas.
 
-## Etapa preparada neste PR
+## Executado e verificado
 
-- Identidade visual da interface, título da API e documentação principal.
-- Valor de exemplo de PROJETO_NOME atualizado.
-- Nenhuma alteração nos algoritmos, nos nomes dos programas ou nos áudios.
-- Caminhos operacionais e variáveis DIVISOR_* mantidos para compatibilidade.
+- Repositorio renomeado de thimacedo/agente_njud para thimacedo/agente_radio,
+  preservando o ID R_kgDOUC5MEg, o historico e os PRs existentes.
+- PR de identidade #7 integrado; interface, API e documentacao usam agente_radio.
+- Checkout movido de E:\02_Projetos_Trabalho\Projetos_Ativos\DIVISOR para
+  E:\02_Projetos_Trabalho\Projetos_Ativos\agente_radio no mesmo diretorio-pai.
+- origin atualizado para https://github.com/thimacedo/agente_radio.git.
+- Excecao Git safe.directory adicionada somente para a nova pasta. O volume
+  nao registra proprietario, e o Git exigiu a excecao apos a renomeacao.
+- Python 3.11 da venv existente executou a partir da pasta nova.
+- Alteracao local anterior em etapa_triagem.py preservada, fora do commit de
+  migracao. SHA256: C73D4315CC23E71FF266A58B575E416A2200BC2E49C698D7760334AB1BF6B929.
+- Descoberta de Drive adicionada; ver DRIVE_AUTOMATICO.md. Nao se troca G: por
+  I: em massa, pois G: agora e outro dispositivo e Meu Drive em I: e um atalho.
 
-## Situação verificada
+## Compatibilidade e preservacao
 
-O repositório remoto ainda se chama thimacedo/agente_njud.
-O checkout local foi identificado historicamente em
-E:\02_Projetos_Trabalho\Projetos_Ativos\DIVISOR.
-A inspeção atual do disco ficou indisponível; a presença, o estado Git e os
-caminhos desse checkout precisam de confirmação antes da movimentação.
-Há alterações e produção registradas em outros ambientes que não devem ser
-substituídas por uma cópia da main remota.
+Variaveis DIVISOR_* e identificadores internos existentes continuam funcionando.
+Nomes dos programas, audios entregues, fontes, manifestos, caches, hashes e
+auditorias nao sao renomeados. Referencias em proveniencia historica ficam como
+foram registradas. A mudanca de nome nao sincroniza automaticamente outros
+checkouts ou ambientes em nuvem.
 
-## Ordem de conclusão
+## Referencias externas que exigem tratamento separado
 
-1. Inventariar cada checkout, HEAD, remoto, alterações sem commit e arquivos não
-   rastreados. Preservar ajustes e fontes; não executar reset, clean ou pull
-   automático.
-2. Buscar referências operacionais a DIVISOR e agente_njud em scripts, configs,
-   serviços, tarefas agendadas, atalhos e automações. Não imprimir segredos.
-3. Registrar processos ativos e seus diretórios. Fazer a troca de pasta em uma
-   janela sem produção ativa.
-4. Renomear o repositório existente para thimacedo/agente_radio nas configurações
-   do GitHub, preservando o mesmo ID, issues, PRs e histórico. Confirmar a URL nova
-   e o redirecionamento da antiga.
-5. Verificar que a pasta de destino não existe e que a origem resolvida é o
-   checkout correto. Renomear a pasta local no mesmo diretório-pai para
-   agente_radio, preservando o conteúdo.
-6. Atualizar origin em cada checkout após confirmar a URL nova. Ajustar caminhos
-   externos inventariados e BASE_DIR no ambiente real. Não sobrescrever .env.
-7. Verificar a portabilidade da venv após a mudança de caminho; recriar apenas
-   quando necessário, preservando a anterior e registrando dependências.
-8. Adicionar nomes AGENTE_RADIO_* com fallback às variáveis DIVISOR_* usadas pelo
-   código. Só trocar nomes internos de módulos com atualização dos imports.
-9. Executar verificações de ambiente, testes pertinentes, health e upload
-   simulado. Validar áudio real em saída isolada antes de retomar produção.
-10. Confirmar URLs, caminhos, hashes dos arquivos preservados e pendências por
-    ambiente. Renomear o repositório não sincroniza os checkouts automaticamente.
+A tarefa agendada DIVISOR Painel aponta para F:\Projetos\DIVISOR, com outro
+ambiente Python e src/tools/dashboard.py. Nao foi redirecionada para o backend
+atual: nao ha evidencia de que esse painel legado seja equivalente. A tarefa
+foi apenas inventariada e preservada.
 
-## Preservação
-
-Nomes de BOLETIM, NJUD e GIRO, áudios entregues, fontes, manifestos, hashes,
-auditorias e registros históricos permanecem intactos. Referências antigas em
-proveniência não devem ser substituídas em massa. Documentação histórica pode
-mencionar o nome anterior; documentação operacional vigente será atualizada
-depois da conferência dos caminhos reais.
-
-## Reversão
-
-Guardar caminho e remoto anteriores no inventário. Em caso de falha, restaurar
-caminhos e configurações a partir desse registro, sem apagar versões ou fontes.
-A reversão do nome no GitHub exige verificar antes a disponibilidade do nome
-anterior. Não usar substituição global em arquivos binários, caches ou venvs.
+Documentos antigos ainda podem descrever src/ e caminhos historicos. Na revisao
+atual, as implementacoes canonicas ficam em scripts_pipeline/boletim,
+scripts_pipeline/njud e scripts_pipeline/giro. Nao restaure modulos antigos
+por causa desses exemplos. Outros checkouts devem ser inventariados antes de
+atualizar seus remotos ou caminhos.

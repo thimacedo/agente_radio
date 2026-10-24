@@ -98,6 +98,8 @@ def stop_process(process):
 
 def run_command(job_id, cmd, timeout=600):
     env = os.environ.copy()
+    from shared.ambiente import inicializar_ambiente
+    app.state.ambiente = inicializar_ambiente(env=env)
     env['PYTHONIOENCODING'] = 'utf-8'
     env.setdefault('DIVISOR_TMP', str(DATA_DIR / 'tmp'))
     Path(env['DIVISOR_TMP']).mkdir(parents=True, exist_ok=True)
@@ -366,6 +368,8 @@ def run_job(job_id: str, tipo: str, input_paths: list[Path]):
 # ============================================================
 @asynccontextmanager
 async def lifespan(app):
+    from shared.ambiente import inicializar_ambiente
+    app.state.ambiente = inicializar_ambiente()
     load_jobs()
     log(f'Server iniciado na porta {PORT}')
     log(f'UPLOAD_DIR: {UPLOAD_DIR}')
@@ -408,6 +412,7 @@ async def health():
         'upload_dir': str(UPLOAD_DIR),
         'output_dir': str(OUTPUT_DIR),
         'projects_dir': str(PROJECT_DIR),
+        'drive': getattr(app.state, 'ambiente', {'status': 'nao_verificado'}),
     }
 
 @app.post('/api/upload')

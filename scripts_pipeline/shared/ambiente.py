@@ -26,9 +26,11 @@ class DriveRadio:
     raiz_drive: Path
     raiz_radio: Path
     origem: str
+    ponto_montagem: Path | None = None
+    atalho: Path | None = None
 
     def serializar(self):
-        return {key: str(value) for key, value in asdict(self).items()}
+        return {key: str(value) if value is not None else None for key, value in asdict(self).items()}
 
 
 def _nome(texto):
@@ -77,7 +79,7 @@ def resolver_atalhos(atalhos):
         f'$links=@({literals});'
         '$result=@(foreach($p in $links){try{'
         '$link=$shell.CreateShortcut($p);'
-        'if($link.TargetPath -and -not $link.Arguments){$link.TargetPath}'
+        'if($link.TargetPath -and -not $link.Arguments){[pscustomobject]@{atalho=$p;destino=$link.TargetPath}}'
         '}catch{}});ConvertTo-Json -InputObject $result -Compress'
     )
     encoded = base64.b64encode(code.encode('utf-16-le')).decode('ascii')
@@ -89,7 +91,10 @@ def resolver_atalhos(atalhos):
         targets = json.loads(result.stdout.lstrip('\ufeff').strip())
         if not isinstance(targets, list):
             return []
-        return [Path(p) for p in targets if isinstance(p, str) and p]
+        allowed = {str(p) for p in atalhos}
+        return [(Path(p['atalho']), Path(p['destino'])) for p in targets
+                if isinstance(p, dict) and p.get('atalho') in allowed
+                and isinstance(p.get('destino'), str) and p['destino']]
     except (OSError, subprocess.SubprocessError, ValueError):
         return []
 
@@ -112,12 +117,12 @@ def descobrir_drive(*, env=None, raizes=None, resolver=None):
     override = env.get('AGENTE_RADIO_DRIVE_ROOT') or env.get('DIVISOR_DRIVE_ROOT')
     found = []
 
-    def add(root, origem):
+    def add(root, origem, ponto_montagem=None, atalho=None):
         for drive, radio in _candidatos(root):
             radio = radio.resolve()
             if any(radio == item.raiz_radio for item in found):
                 continue
-            found.append(DriveRadio(drive.resolve(), radio, origem))
+            found.append(DriveRadio(drive.resolve(), radio, origem, ponto_montagem, atalho))
 
     if override:
         add(Path(override).expanduser(), 'configuracao')
@@ -129,13 +134,17 @@ def descobrir_drive(*, env=None, raizes=None, resolver=None):
     links = []
     for root in roots:
         root = Path(root)
-        add(root, 'unidade')
+        add(root, 'unidade', ponto_montagem=root)
         for name in ('Meu Drive.lnk', 'My Drive.lnk'):
             link = root / name
             if link.is_file():
                 links.append(link)
-    for target in (resolver or resolver_atalhos)(links):
-        add(target, 'atalho')
+    for resolved in (resolver or resolver_atalhos)(links):
+        if isinstance(resolved, tuple):
+            link, target = resolved
+            add(target, 'atalho', ponto_montagem=Path(link).parent, atalho=Path(link))
+        else:
+            add(resolved, 'atalho')
     if len(found) > 1:
         raise DriveAmbiguo('Mais de um acervo valido. Defina AGENTE_RADIO_DRIVE_ROOT: '
                           + '; '.join(str(item.raiz_radio) for item in found))

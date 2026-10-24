@@ -57,10 +57,12 @@ def test_segue_atalho_sem_executar_arquivo(tmp_path):
     radio = acervo(tmp_path / 'espelho')
     def resolve(links):
         assert links == [link]
-        return [radio.parent]
+        return [(link, radio.parent)]
     result = ambiente.descobrir_drive(env={}, raizes=[volume], resolver=resolve)
     assert result.raiz_radio == radio
     assert result.origem == 'atalho'
+    assert result.ponto_montagem == volume
+    assert result.atalho == link
 
 
 def test_atalho_e_caminho_direto_deduplicados(tmp_path):

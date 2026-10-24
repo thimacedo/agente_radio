@@ -1,4 +1,4 @@
-# Programador — Frontend DIVISOR
+# agente_radio — Interface de produção
 
 ## Ambiente de desenvolvimento e testes
 
@@ -83,7 +83,7 @@ O `server.py` (FastAPI) **não roda no Vercel** (Whisper, minutos, filesystem lo
 | Var | Default | Descrição |
 |---|---|---|
 | `PORT` | 8001 | Porta do servidor |
-| `PROJECT_DIR` | auto | Caminho do projeto DIVISOR |
+| `PROJECT_DIR` | auto | Caminho do projeto agente_radio |
 | `UPLOAD_DIR` | `data/uploads` | Pasta de uploads temporários |
 | `OUTPUT_DIR` | `data/output` | Pasta de saída dos resultados |
 | `SIMULATE` | 0 | 1 = roda pipelines em simulação |

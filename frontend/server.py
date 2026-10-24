@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Programador — DIVISOR
+agente_radio — Produção de rádio TJRN
 Backend mínimo para o frontend web.
 
 Serve o frontend + endpoints de upload/jobs/download.
@@ -377,7 +377,7 @@ async def lifespan(app):
         log('Server encerrado')
 
 
-app = FastAPI(title='Programador — DIVISOR', version='0.1.0', lifespan=lifespan)
+app = FastAPI(title='agente_radio — Produção de rádio TJRN', version='0.1.0', lifespan=lifespan)
 
 # CORS (frontend pode estar em outra origem no Vercel)
 app.add_middleware(

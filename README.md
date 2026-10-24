@@ -1,4 +1,12 @@
-# DIVISOR — Pipeline de Boletins de Rádio TJRN
+# agente_radio — Produção de rádio TJRN
+
+Sistema de produção dos programas **BOLETIM, NJUD e GIRO nas Comarcas**.
+Anteriormente identificado como DIVISOR, no repositório `agente_njud`.
+
+A migração do nome está em andamento. Esta alteração atualiza a identidade
+exibida; a renomeação do repositório e das pastas depende das etapas de
+[compatibilidade e validação](docs/RENOMEACAO_AGENTE_RADIO.md).
+Caminhos e variáveis `DIVISOR_*` existentes continuam válidos nesta etapa.
 
 ## Ambiente de desenvolvimento e testes
 

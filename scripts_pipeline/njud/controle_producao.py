@@ -323,6 +323,11 @@ def main():
     rev.add_argument("--motivo", required=True); rev.add_argument("--checks", type=Path)
     res = sub.add_parser("aprendizado"); res.add_argument("pasta", type=Path)
     args = parser.parse_args()
+    if __package__ in (None, ''):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from shared.ambiente import inicializar_ambiente
+    inicializar_ambiente()
     if args.comando == "preparar":
         result = preparar(json.loads(args.manifesto.read_text(encoding="utf-8")), args.destino)
     elif args.comando == "revisar":

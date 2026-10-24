@@ -910,6 +910,8 @@ def main() -> None:
         help="Alvo de loudness (default: -16 LUFS).",
     )
     args = parser.parse_args()
+    from shared.ambiente import inicializar_ambiente
+    inicializar_ambiente()
 
     logger = LogPipeline(args.pasta_saida / "logs" if hasattr(args.pasta_saida, "__truediv__") else None)
 

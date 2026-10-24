@@ -11,6 +11,9 @@ from fastapi.testclient import TestClient
 
 @pytest.fixture
 def backend(tmp_path, monkeypatch):
+    monkeypatch.setattr('shared.ambiente.unidades_disponiveis', lambda: [])
+    monkeypatch.delenv('AGENTE_RADIO_DRIVE_ROOT', raising=False)
+    monkeypatch.delenv('DIVISOR_DRIVE_ROOT', raising=False)
     monkeypatch.setenv('DATA_DIR', str(tmp_path))
     monkeypatch.setenv('UPLOAD_DIR', str(tmp_path / 'uploads'))
     monkeypatch.setenv('OUTPUT_DIR', str(tmp_path / 'output'))
@@ -29,6 +32,16 @@ def test_health_and_multipart_upload(backend):
         assert response.status_code == 200
         assert Path(response.json()['path']).read_bytes() == b'RIFF'
         assert client.post('/api/upload', files={'file': ('bad.txt', b'x')}).status_code == 400
+
+
+def test_startup_reports_verified_drive(backend, tmp_path, monkeypatch):
+    radio = tmp_path / 'volume' / 'Meu Drive' / 'RADIO TJRN CONTEÚDO'
+    (radio / '00_PRODUCAO_2026').mkdir(parents=True)
+    monkeypatch.setattr('shared.ambiente.unidades_disponiveis', lambda: [tmp_path / 'volume'])
+    with TestClient(backend.app) as client:
+        drive = client.get('/health').json()['drive']
+        assert drive['status'] == 'disponivel'
+        assert Path(drive['raiz_radio']) == radio
 
 
 def test_njud_uses_current_python_and_canonical_script(backend, monkeypatch):

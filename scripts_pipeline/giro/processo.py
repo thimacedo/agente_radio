@@ -40,6 +40,8 @@ def main(argv=None):
     p.add_argument('--destino', type=Path, required=True)
     p.add_argument('--apply', action='store_true')
     args = parser.parse_args(argv)
+    from shared.ambiente import inicializar_ambiente
+    inicializar_ambiente()
     try:
         raiz = args.raiz.resolve()
         if args.acao == 'planejar':

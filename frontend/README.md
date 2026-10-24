@@ -46,7 +46,7 @@ Interface web para disparar 1 programa por vez: **Boletins**, **NJUD** ou **Giro
 ## Versão local
 
 ```bash
-cd E:/02_Projetos_Trabalho/Projetos_Ativos/DIVISOR/frontend
+cd E:/02_Projetos_Trabalho/Projetos_Ativos/agente_radio/frontend
 python server.py
 ```
 

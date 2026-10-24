@@ -1,12 +1,16 @@
 # agente_radio — Produção de rádio TJRN
 
 Sistema de produção dos programas **BOLETIM, NJUD e GIRO nas Comarcas**.
+O Drive e verificado automaticamente na inicializacao, incluindo atalhos e
+mudancas de letra. Use `./dev.ps1 ambiente` para consultar o caminho validado.
+Veja [descoberta do Drive](docs/DRIVE_AUTOMATICO.md).
 Anteriormente identificado como DIVISOR, no repositório `agente_njud`.
 
-A migração do nome está em andamento. Esta alteração atualiza a identidade
-exibida; a renomeação do repositório e das pastas depende das etapas de
-[compatibilidade e validação](docs/RENOMEACAO_AGENTE_RADIO.md).
-Caminhos e variáveis `DIVISOR_*` existentes continuam válidos nesta etapa.
+Repositorio: [thimacedo/agente_radio](https://github.com/thimacedo/agente_radio).
+Checkout base: `E:\02_Projetos_Trabalho\Projetos_Ativos\agente_radio`.
+O nome do repositorio e a pasta local foram migrados em 24/10/2026;
+variaveis `DIVISOR_*` e nomes internos antigos continuam como compatibilidade.
+Veja o [registro da migracao](docs/RENOMEACAO_AGENTE_RADIO.md).
 
 ## Ambiente de desenvolvimento e testes
 

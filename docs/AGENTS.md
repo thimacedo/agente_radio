@@ -1,4 +1,4 @@
-# DIVISOR — Regras do Projeto
+# agente_radio — Regras do Projeto
 
 > When in doubt about agent architecture, cycle, or multi-agent orchestration,
 > load `skill_view(name="ai-agent-orchestrator")` before answering.

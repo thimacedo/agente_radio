@@ -587,6 +587,8 @@ if __name__ == "__main__":
     parser.add_argument("--saida", help="Pasta local exclusiva para montagem por manifesto")
     parser.add_argument("--roteiros", help="Pasta com roteiros em texto (opcional)", default=None)
     args = parser.parse_args()
+    from shared.ambiente import inicializar_ambiente
+    inicializar_ambiente()
     if args.manifesto:
         if not args.saida:
             parser.error("--manifesto exige --saida")
